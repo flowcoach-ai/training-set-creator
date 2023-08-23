@@ -2,13 +2,31 @@ import cv2
 import mediapipe as mp
 import csv
 from itertools import chain
+import datetime
+import os
+
+utc_datetime = datetime.datetime.utcnow()
+formatted_datetime = utc_datetime.strftime("%Y-%m-%d-%H-%M-%S")
+
+SAMPLE_RATE = 6
+
 
 # Initialize mediapipe pose module
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 
-# Initialize OpenCV's VideoCapture
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
+frame_width = int(cap.get(3))
+frame_height = int(cap.get(4))
+clip_folder_name = f'clip_{formatted_datetime}'
+clip_folder_path = f'clips/{clip_folder_name}'
+if not os.path.exists(clip_folder_path):
+    os.makedirs(clip_folder_path)
+    print(f"Folder '{clip_folder_path}' created successfully.")
+else:
+    print(f"Folder '{clip_folder_path}' already exists.")
+
+out = cv2.VideoWriter(f"{clip_folder_path}/output.mp4", cv2.VideoWriter_fourcc(*'avc1'), 30, (frame_width, frame_height))
 
 # Initialize CSV file for saving poses
 csv_filename = 'raw_data/pose.csv'
@@ -28,6 +46,8 @@ def xyz(pose_landmark):
 heading = list(chain.from_iterable([coords(i) for i in range(33)]))
 csv_writer.writerow(heading)
 
+frame_counter = 0
+
 while cap.isOpened():
     ret, frame = cap.read()
 
@@ -43,6 +63,7 @@ while cap.isOpened():
 
     # Draw landmarks and connections on the frame
     if results.pose_landmarks:
+        frame_counter += 1
         landmark_list = []
         for i, landmark in enumerate(results.pose_landmarks.landmark):
             x, y = int(landmark.x * frame.shape[1]), int(landmark.y * frame.shape[0])
@@ -57,11 +78,18 @@ while cap.isOpened():
             cv2.line(frame, (x1, y1), (x2, y2), (0, 255, 0), 2)
 
         # Save landmarks to CSV file
-        row = list(chain.from_iterable([xyz(landmark) for landmark in results.pose_landmarks.landmark]))
-        csv_writer.writerow(row)
+
+        if frame_counter % SAMPLE_RATE == 0:
+            row = list(chain.from_iterable([xyz(landmark) for landmark in results.pose_landmarks.landmark]))
+            csv_writer.writerow(row)
+            cv2.imwrite(f"{clip_folder_path}/frame_{frame_counter}.jpg", frame)
+
+
 
     # Display the processed frame
     cv2.imshow('Whole Body Pose', frame)
+
+    out.write(frame)
 
     # Exit the loop if 'q' key is pressed
     if cv2.waitKey(1) & 0xFF == ord('q'):
