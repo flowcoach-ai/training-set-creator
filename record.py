@@ -82,7 +82,17 @@ while cap.isOpened():
         if frame_counter % SAMPLE_RATE == 0:
             row = list(chain.from_iterable([xyz(landmark) for landmark in results.pose_landmarks.landmark]))
             csv_writer.writerow(row)
+
             cv2.imwrite(f"{clip_folder_path}/frame_{frame_counter}.jpg", frame)
+
+            csv_filename = f"{clip_folder_path}/frame_{frame_counter}.csv"
+            csv_frame_file = open(csv_filename, mode='w')
+            csv_frame_writer = csv.writer(csv_frame_file)
+            csv_frame_writer.writerow(row)
+            csv_frame_file.close()
+
+            with open(f"{clip_folder_path}/frame_{frame_counter}.txt", 'w') as file:
+                pass
 
 
 
