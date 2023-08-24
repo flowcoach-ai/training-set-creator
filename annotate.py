@@ -94,4 +94,10 @@ if selected_directory and len(frame) > 0:
                 time.sleep(3)
                 st.experimental_rerun()
 else:
-    st.success(f"Annotation complete for {selected_directory}")
+    if selected_directory is None:
+        st.error("There are no clips to run in the /clips folder.")
+        st.warning("Make sure to add the clip_* folders to the /clips folder.")
+        st.markdown(":violet[Record data to annotate: ] **:blue[python record.py]** ")
+
+    else:
+        st.success(f"Annotation complete for {selected_directory}")
