@@ -15,7 +15,7 @@ SAMPLE_RATE = 6
 mp_pose = mp.solutions.pose
 pose = mp_pose.Pose()
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 frame_width = int(cap.get(3))
 frame_height = int(cap.get(4))
 clip_folder_name = f'clip_{formatted_datetime}'
