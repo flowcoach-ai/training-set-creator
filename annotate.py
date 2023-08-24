@@ -119,7 +119,7 @@ if selected_directory:
 
             if selected_instructions != 'None' and selected_checkpoint != 'None':
                 with open(f"{selected_directory}/{frame[st.session_state.current_index]}.txt", 'w') as file:
-                    file.write(f'{selected_checkpoint}:{selected_instructions}')
+                    file.write(f'{selected_checkpoint}\n{selected_instructions}')
                 st.write(f"{frame[st.session_state.current_index]} has been updated.")
                 my_bar.progress(index + 1, text=progress_text)
                 st.session_state.current_index = index
