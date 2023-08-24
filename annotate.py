@@ -3,36 +3,25 @@ import time
 from utils.filemanager import FileManager
 
 instructions = {
-    'Downward Dog': [
-        'Focus on pressing your heels toward the ground.',
-        'Engage your core muscles for better stability.',
-        'Relax your neck and let your head hang naturally.'
-    ],
-    '3 Legged Dog': [
-        'Extend your raised leg higher for a deeper stretch.',
-        'Keep your hips squared and facing downward.',
-        'Maintain an even distribution of weight between your hands.'
-    ],
     'Low Lunge': [
-        'Ensure your front knee is directly above your ankle.',
-        'Activate your back leg to feel a stretch in your hip flexor.',
-        'Consider using props for better balance and alignment.'
+        'Make sure your feet are hips-width distance.',
+        'leg back one leg forward',
+        'Make sure front leg shin is in a nice straight line.',
+        'fingertips underneath your shoulders',
+        'Press torso up over your pelvis',
+        'Lift back knee off the ground.',
+        'Put a little bend in back leg knee'
     ],
     'Crescent Pose': [
-        'Sink deeper into your front knee while keeping your back leg straight.',
+        'Lift your lower belly and draw your ribs in',
+        'Straighten your back leg',
+        'pressing the heel back and lifting the inner thigh squeeze your inner thighs together',
+        'Get your arms up towards the sky.',
+        'Lift your back ribs'
         'Engage your core muscles to stabilize your torso.',
-        'Extend your arms upward and feel the stretch in your back.'
+        #  'Touch palms and gaze up towards your hands',
+        #  #Still think this can be extra credit that's mentioned in the app
     ],
-    'Look Up': [
-        'Gently lift your chin while maintaining a neutral spine.',
-        'Engage your upper back muscles to avoid straining your neck.',
-        'Breathe deeply and create space in your chest and throat.'
-    ],
-    'Back Bend': [
-        'Start with a gentle backbend and gradually increase the arch.',
-        'Press your hips forward to protect your lower back.',
-        'Engage your glutes and quads for added stability.'
-    ]
 }
 
 st.title("Aggregating & Annotating Platform")
