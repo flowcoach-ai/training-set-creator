@@ -1,0 +1,92 @@
+import streamlit as st
+import time
+from utils.filemanager import FileManager
+
+instructions = {
+    'Low Lunge': [
+        'Make sure your feet are hips-width distance.',
+        'leg back one leg forward',
+        'Make sure front leg shin is in a nice straight line.',
+        'fingertips underneath your shoulders',
+        'Press torso up over your pelvis',
+        'Lift back knee off the ground.',
+        'Put a little bend in back leg knee'
+    ],
+    'Crescent Pose': [
+        'Lift your lower belly and draw your ribs in',
+        'Straighten your back leg',
+        'pressing the heel back and lifting the inner thigh squeeze your inner thighs together',
+        'Get your arms up towards the sky.',
+        'Lift your back ribs'
+        'Engage your core muscles to stabilize your torso.',
+        #  'Touch palms and gaze up towards your hands',
+        #  #Still think this can be extra credit that's mentioned in the app
+    ],
+}
+
+st.title("Aggregating & Annotating Platform")
+
+if 'current_index' not in st.session_state:
+    st.session_state['current_index'] = 0
+
+FM = FileManager()
+
+
+def onchange():
+    st.session_state.current_index = 0
+
+
+selected_directory = st.selectbox('Directory:', FM.clips_directories(), on_change=onchange)
+
+
+def current_progress():
+    current = FM.frames(selected_directory)
+    completed = FM.get_total_frames() - len(current)
+    if completed == 0 or FM.get_total_frames() == 0:
+        return 0
+    total_frames = FM.get_total_frames()
+    return round((completed / total_frames) * 100)
+
+
+progress_text = ""
+bar = st.progress(current_progress(), text=progress_text)
+frame = FM.frames(selected_directory)
+
+if selected_directory and len(frame) > 0:
+    index = st.session_state.current_index
+    checkpoints = list(instructions.keys())
+    checkpoints.insert(0, 'None')
+    selected_instructions_values = []
+    if f'save{index}' not in st.session_state:
+        st.session_state[f'save{index}'] = False
+
+    if index == st.session_state.current_index:
+        st.image(f"{selected_directory}/{frame[index]}.jpg",
+                 caption=f"{frame[index]}",
+                 use_column_width=True)
+
+        selected_checkpoint = st.selectbox('Checkpoints:', checkpoints, key=f"checkpoint-{index}")
+        if selected_checkpoint != 'None':
+            selected_instructions_values = instructions[selected_checkpoint]
+            selected_instructions_values.insert(0, 'None')
+
+        selected_instructions = st.selectbox('Instructions:', selected_instructions_values,
+                                             key=f"instructions-{index}")
+
+        if selected_instructions != 'None' and selected_checkpoint != 'None':
+            if st.button('Save', key=f"save-{index}"):
+                with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
+                    y_txt.write(f"{selected_checkpoint}\n{selected_instructions}")
+                st.session_state[f'save{index}'] = True
+                st.session_state.current_index += 1
+                bar.progress(current_progress())
+                time.sleep(3)
+                st.experimental_rerun()
+else:
+    if selected_directory is None:
+        st.error("There are no clips to run in the /clips folder.")
+        st.warning("Make sure to add the clip_* folders to the /clips folder.")
+        st.markdown(":violet[Record data to annotate: ] **:blue[python record.py]** ")
+
+    else:
+        st.success(f"Annotation complete for {selected_directory}")
