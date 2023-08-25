@@ -57,7 +57,7 @@ frame = FM.frames(selected_directory)
 if selected_directory and len(frame) > 0:
     index = st.session_state.current_index
     checkpoints = list(instructions.keys())
-    # checkpoints.insert(0, 'None')
+    checkpoints.insert(2, 'None')
     selected_instructions_values = []
     if f'save{index}' not in st.session_state:
         st.session_state[f'save{index}'] = False
