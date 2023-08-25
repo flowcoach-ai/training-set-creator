@@ -23,12 +23,7 @@ instructions = {
 }
 
 def translate_pose(pose_name):
-    if pose_name == 'Low Lunge':
-        return 0
-    elif pose_name == 'Crescent Pose':
-        return 1
-    else:
-        return 2
+    return(index(instructions.keys(), pose_name))
 
 def translate_instruction(pose_name, instruction):
     return (index(translate_pose(pose_name)), index(instruction))
@@ -64,7 +59,7 @@ frame = FM.frames(selected_directory)
 if selected_directory and len(frame) > 0:
     index = st.session_state.current_index
     checkpoints = list(instructions.keys())
-    checkpoints.insert(0, 'None')
+    # checkpoints.insert(0, 'None')
     selected_instructions_values = []
     if f'save{index}' not in st.session_state:
         st.session_state[f'save{index}'] = False
