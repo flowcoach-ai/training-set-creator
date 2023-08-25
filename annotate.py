@@ -18,7 +18,8 @@ instructions = {
         "raise your arms up towards the sky",
         "as you inhale lengthen through the sides of your waist",
         "lift your back ribs as you exhale",
-        "bring palms to touch and gaze up towards your hands"
+        "bring palms to touch and gaze up towards your hands",
+        "perfect"
     ],
     "Correction": [
         "turn to your side",
