@@ -22,10 +22,10 @@ instructions = {
     ],
 }
 
-def translate_pose(pose_name):
+def translate_pose_into_number(pose_name):
     return(index(instructions.keys(), pose_name))
 
-def translate_instruction(pose_name, instruction):
+def translate_instruction_into_number(pose_name, instruction):
     return (index(translate_pose(pose_name)), index(instruction))
 
 st.title("Aggregating & Annotating Platform")

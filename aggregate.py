@@ -4,8 +4,34 @@ import re
 import mediapipe as mp
 from itertools import chain
 
+instructions = {
+    'Low Lunge': [
+        'Come into a runners lunge one',
+        'leg back one leg forward with your',
+        'fingertips underneath your shoulders on',
+        'the mat make sure that your feet are hips-width in distance and that your front leg Shin is in a nice straight line over the top of the foot the back, leg knee is lifted up off the ground',
+        'with the ball of the foot stacked underneath the heel put a little bend in',
+        'your back leg knee place your hands on your front leg knee and press your torso',
+    ],
+    'Crescent Pose': [
+        'up over your pelvis from here lift your',
+        'lower belly and draw your ribs in begin',
+        'to straighten your back leg by pressing the heel back and lifting the inner',
+        'thigh squeeze your inner thighs together',
+        'your arms up towards the sky as you',
+        'inhale lengthen through the sides of your waist and lift your back ribs as you exhale draw your front ribs down and',
+        'palms to touch and gaze up towards your hands'
+    ],
+}
+
+def translate_pose_number_into_text(pose_number):
+    return(checkpoints(pose_number))
+
+def translate_instruction_number_into_text(pose_number, instruction_number):
+    return (index(translate_pose_number_into_text(pose_number)), index(instruction))
 
 def titleize_checkpoint(cp):
+    checkpoint = translate_pose_into_text(cp)
     return 'IS_' + cp.replace(" ", "_").upper()
 
 
@@ -69,11 +95,11 @@ def run():
                     if len(lines) == 0:
                         print(f'{file_path} is empty!')
                         continue
-                    checkpoint = lines[0].strip()
-                    instruction = lines[1].strip()
+                    checkpoint_number = lines[0].strip()
+                    instruction_number = lines[1].strip()
                     try:
-                        rows[file_number].extend(annotate_checkpoint(checkpoint))
-                        rows[file_number].append(instruction)
+                        rows[file_number].extend(annotate_checkpoint(checkpoint_number))
+                        rows[file_number].append(translate_instruction_number_into_text(checkpoint_number, instruction_number))
                         csv_writer.writerow(rows[file_number])
                     except Exception as e:
                         print(e)
