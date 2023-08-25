@@ -4,12 +4,10 @@ from utils.filemanager import FileManager
 
 instructions = {
     'Low Lunge': [
-        'Come into a runners lunge one',
-        'leg back one leg forward with your',
-        'fingertips underneath your shoulders on',
-        'the mat make sure that your feet are hips-width in distance and that your front leg Shin is in a nice straight line over the top of the foot the back, leg knee is lifted up off the ground',
-        'with the ball of the foot stacked underneath the heel put a little bend in',
-        'your back leg knee place your hands on your front leg knee and press your torso',
+        'come into a low lunge',
+        'bring one leg back one leg forward with your fingertips underneath your shoulders on the mat',
+        'make sure that your feet are hips-width in distance and that your front leg shin is in a nice straight line over the top of the front foot',
+        'with the ball of the back foot stacked underneath the heel put a little bend in your back leg knee'
     ],
     'Crescent Pose': [
         'up over your pelvis from here lift your',
