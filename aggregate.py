@@ -103,8 +103,16 @@ def run():
                     if len(lines) == 0:
                         print(f'{file_path} is empty!')
                         continue
+
+                    instruction = lines[1].strip()
+
+                    if instruction == "None":
+                        print(f'skipping {file_path}: no instruction specified')
+                        continue
+
                     checkpoint = translate_pose_number_into_text(lines[0].strip())
-                    instruction = translate_instruction_number_into_text(checkpoint, lines[1].strip())
+                    # instruction = translate_instruction_number_into_text(checkpoint, lines[1].strip())
+
                     try:
                         rows[file_number].extend(annotate_checkpoint(checkpoint))
                         rows[file_number].append(instruction)

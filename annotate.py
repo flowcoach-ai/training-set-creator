@@ -27,11 +27,14 @@ instructions = {
     ]
 }
 
+
 def translate_pose_into_number(pose_name):
     return list(instructions.keys()).index(pose_name)
 
+
 def translate_instruction_into_number(pose_name, instruction):
     return instructions[pose_name].index(instruction)
+
 
 st.title("Aggregating & Annotating Platform")
 
@@ -93,7 +96,7 @@ if selected_directory and len(frame) > 0:
 
         if st.button('Skip', key=f"skip-{index}"):
             with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
-                y_txt.write("Low Lunge\nNone")
+                y_txt.write("None\nNone")
             st.experimental_rerun()
 else:
     if selected_directory is None:
