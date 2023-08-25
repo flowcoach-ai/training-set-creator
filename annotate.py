@@ -4,23 +4,21 @@ from utils.filemanager import FileManager
 
 instructions = {
     'Low Lunge': [
-        'Make sure your feet are hips-width distance.',
-        'leg back one leg forward',
-        'Make sure front leg shin is in a nice straight line.',
-        'fingertips underneath your shoulders',
-        'Press torso up over your pelvis',
-        'Lift back knee off the ground.',
-        'Put a little bend in back leg knee'
+        "Come into a runner's lunge one",
+        'leg back one leg forward with your',
+        'fingertips underneath your shoulders on',
+        'the mat make sure that your feet are hips-width in distance and that your front leg Shin is in a nice straight line over the top of the foot the back, leg knee is lifted up off the ground',
+        'with the ball of the foot stacked underneath the heel put a little bend in',
+        'your back leg knee place your hands on your front leg knee and press your torso',
     ],
     'Crescent Pose': [
-        'Lift your lower belly and draw your ribs in',
-        'Straighten your back leg',
-        'pressing the heel back and lifting the inner thigh squeeze your inner thighs together',
-        'Get your arms up towards the sky.',
-        'Lift your back ribs'
-        'Engage your core muscles to stabilize your torso.',
-        #  'Touch palms and gaze up towards your hands',
-        #  #Still think this can be extra credit that's mentioned in the app
+        'up over your pelvis from here lift your',
+        'lower belly and draw your ribs in begin',
+        'to straighten your back leg by pressing the heel back and lifting the inner',
+        'thigh squeeze your inner thighs together',
+        'your arms up towards the sky as you',
+        'inhale lengthen through the sides of your waist and lift your back ribs as you exhale draw your front ribs down and',
+        'palms to touch and gaze up towards your hands'
     ],
 }
 

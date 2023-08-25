@@ -1,7 +1,21 @@
 import csv
 import os
+import re
 import mediapipe as mp
 from itertools import chain
+
+
+def titleize_checkpoint(cp):
+    return 'IS_' + cp.replace(" ", "_").upper()
+
+
+checkpoints = ['Low Lunge',
+               'Crescent Pose']
+
+checkpoint_titles = [titleize_checkpoint(cp) for cp in checkpoints]
+
+mp_pose = mp.solutions.pose
+required_row_length = 99 + len(checkpoint_titles) + 1
 
 
 def coords(i):
@@ -10,60 +24,62 @@ def coords(i):
             f"{mp_pose.PoseLandmark(i).name}_Z"]
 
 
-def titleize_checkpoint(cp):
-    return 'IS_' + cp.replace(" ", "_").upper()
+def annotate_checkpoint(cp):
+    titled_cp = titleize_checkpoint(cp)
+    if titled_cp not in checkpoint_titles:
+        raise Exception(f'Checkpoint is not defined: {cp}')
+
+    return [str(int(titled_cp == title)) for title in checkpoint_titles]
 
 
-absolute_path = os.path.dirname(__file__)
-mp_pose = mp.solutions.pose
-csv_filename = 'raw_data/training_set.csv'
-csv_file = open(csv_filename, mode='w')
-csv_writer = csv.writer(csv_file)
+def run():
+    absolute_path = os.path.dirname(__file__)
+    csv_filename = 'raw_data/training_set.csv'
+    csv_file = open(csv_filename, mode='w')
+    csv_writer = csv.writer(csv_file)
 
-checkpoints = ['Downward Dog',
-               '3 Legged Dog',
-               'Forward Lunge',
-               'Crescent Pose',
-               'Raise Hands',
-               'Arch Your Back']
+    heading = list(chain.from_iterable([coords(i) for i in range(33)]))
+    heading.extend(checkpoint_titles)
+    heading.append('INSTRUCTION')
+    csv_writer.writerow(heading)
 
-checkpoint_titles = [titleize_checkpoint(cp) for cp in checkpoints]
-heading = list(chain.from_iterable([coords(i) for i in range(33)]))
-heading.append(checkpoint_titles)
-heading.append('INSTRUCTION')
-csv_writer.writerow(heading)
+    root_path = os.path.join(absolute_path, 'clips')
 
-root_path = os.path.join(absolute_path, 'clips')
+    for folder in os.listdir(os.fsencode(root_path)):
+        rows = {}
+        folder_name = os.fsdecode(folder)
+        folder_path = os.path.join(absolute_path, 'clips', folder_name)
 
-for folder in os.listdir(os.fsencode(root_path)):
-    folder_name = os.fsdecode(folder)
-    folder_path = os.path.join(absolute_path, 'clips', folder_name)
-    for file in os.listdir(os.fsencode(folder_path)):
-        file_name = os.fsdecode(file)
-        file_path = os.path.join(folder_path, file_name)
-        if file_name.endswith('.csv'):
-            print(file_path)
-            print("hi")
-            with open(file_path, 'r') as textfile:
-                line = textfile.readline().strip()
-                row = line.split(',')
+        for file in sorted(os.listdir(os.fsencode(folder_path))):
+            file_name = os.fsdecode(file)
+            file_number = re.search(r'\d+', file_name).group()
 
-            # print(os.path.join(directory, filename))
-            continue
-        elif file_name.endswith('.txt'):
-            print(file_path)
-            print("bye txt")
-            with open(file_path, 'r') as textfile:
-                lines = textfile.readlines()
-                if len(lines) == 0:
-                    raise Exception(f'{file_path} is empty!')
-                checkpoint = lines[0].strip()
-                instruction = lines[1].strip()
-                row.append(annotate_checkpoint)
-                row.append(instruction)
-                csv_writer.writerow(row)
-            continue
-        else:
-            continue
+            if rows.get(file_number) is None:
+                rows[file_number] = []
 
-csv_file.close()
+            file_path = os.path.join(folder_path, file_name)
+            if file_name.endswith('.csv'):
+                with open(file_path, 'r') as textfile:
+                    line = textfile.readline().strip()
+                    values = line.split(',')
+                    rows[file_number].extend(values)
+                continue
+            elif file_name.endswith('.txt'):
+                with open(file_path, 'r') as textfile:
+                    lines = textfile.readlines()
+                    if len(lines) == 0:
+                        raise Exception(f'{file_path} is empty!')
+                    checkpoint = lines[0].strip()
+                    instruction = lines[1].strip()
+                    rows[file_number].extend(annotate_checkpoint(checkpoint))
+                    rows[file_number].append(instruction)
+                    csv_writer.writerow(rows[file_number])
+
+                continue
+            else:
+                continue
+
+    csv_file.close()
+
+
+run()
