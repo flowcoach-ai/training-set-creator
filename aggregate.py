@@ -85,6 +85,8 @@ def run():
 
         for file in sorted(os.listdir(os.fsencode(folder_path))):
             file_name = os.fsdecode(file)
+            if not file_name.startswith('frame'):
+                continue
             file_number = re.search(r'\d+', file_name).group()
 
             if rows.get(file_number) is None:
