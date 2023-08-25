@@ -27,7 +27,7 @@ class FileManager:
                 name_without_extension = filename.split('.')[0]  # Remove anything after the "."
                 unique_frames.add(name_without_extension)
 
-            self.frame_filenames = list(unique_frames)
+            self.frame_filenames = sorted(list(unique_frames))
             self.total_frames = len(self.frame_filenames)
 
         return self.unsaved_frames()
