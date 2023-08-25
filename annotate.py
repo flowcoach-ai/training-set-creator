@@ -3,28 +3,38 @@ import time
 from utils.filemanager import FileManager
 
 instructions = {
-    'Low Lunge': [
-        'come into a low lunge',
-        'bring one leg back one leg forward with your fingertips underneath your shoulders on the mat',
-        'make sure that your feet are hips-width in distance and that your front leg shin is in a nice straight line over the top of the front foot',
-        'with the ball of the back foot stacked underneath the heel put a little bend in your back leg knee'
+    "Low Lunge": [
+        "come into a low lunge",
+        "bring one leg back one leg forward with your fingertips underneath your shoulders on the mat",
+        "make sure that your feet are hips-width in distance and that your front leg shin is in a nice straight line over the top of the front foot",
+        "with the ball of the back foot stacked underneath the heel put a little bend in your back leg knee"
     ],
-    'Crescent Pose': [
-        'up over your pelvis from here lift your',
-        'lower belly and draw your ribs in begin',
-        'to straighten your back leg by pressing the heel back and lifting the inner',
-        'thigh squeeze your inner thighs together',
-        'your arms up towards the sky as you',
-        'inhale lengthen through the sides of your waist and lift your back ribs as you exhale draw your front ribs down and',
-        'palms to touch and gaze up towards your hands'
+    "Crescent Pose": [
+        "place your hands on your front leg knee",
+        "press your torso up over your pelvis",
+        "lift your lower belly and draw your ribs in",
+        "begin to straighten your back leg by pressing the heel back and lifting the inner thigh",
+        "squeeze your inner thighs together",
+        "raise your arms up towards the sky",
+        "as you inhale lengthen through the sides of your waist",
+        "lift your back ribs as you exhale",
+        "bring palms to touch and gaze up towards your hands",
+        "perfect"
     ],
+    "Correction": [
+        "turn to your side",
+        "lower back down into a lunge",
+    ]
 }
+
 
 def translate_pose_into_number(pose_name):
     return list(instructions.keys()).index(pose_name)
 
+
 def translate_instruction_into_number(pose_name, instruction):
     return instructions[pose_name].index(instruction)
+
 
 st.title("Aggregating & Annotating Platform")
 
@@ -57,7 +67,7 @@ frame = FM.frames(selected_directory)
 if selected_directory and len(frame) > 0:
     index = st.session_state.current_index
     checkpoints = list(instructions.keys())
-    checkpoints.insert(2, 'None')
+    checkpoints.insert(len(checkpoints)-1, 'None')
     selected_instructions_values = []
     if f'save{index}' not in st.session_state:
         st.session_state[f'save{index}'] = False
@@ -70,20 +80,23 @@ if selected_directory and len(frame) > 0:
         selected_checkpoint = st.selectbox('Checkpoints:', checkpoints, key=f"checkpoint-{index}")
         if selected_checkpoint != 'None':
             selected_instructions_values = instructions[selected_checkpoint]
-            selected_instructions_values.insert(0, 'None')
+            selected_instructions_values.insert(len(instructions[selected_checkpoint]), 'None')
 
         selected_instructions = st.selectbox('Instructions:', selected_instructions_values,
                                              key=f"instructions-{index}")
 
-        if selected_instructions != 'None' and selected_checkpoint != 'None':
-            if st.button('Save', key=f"save-{index}"):
-                with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
-                    y_txt.write(f"{translate_pose_into_number(selected_checkpoint)}\n{translate_instruction_into_number(selected_checkpoint, selected_instructions)}")
-                st.session_state[f'save{index}'] = True
-                st.session_state.current_index += 1
-                bar.progress(current_progress())
-                time.sleep(3)
-                st.experimental_rerun()
+        if st.button('Save', key=f"save-{index}"):
+            with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
+                y_txt.write(f"{translate_pose_into_number(selected_checkpoint)}\n{translate_instruction_into_number(selected_checkpoint, selected_instructions)}")
+            st.session_state[f'save{index}'] = True
+            st.session_state.current_index += 1
+            bar.progress(current_progress())
+            st.experimental_rerun()
+
+        if st.button('Skip', key=f"skip-{index}"):
+            with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
+                y_txt.write("None\nNone")
+            st.experimental_rerun()
 else:
     if selected_directory is None:
         st.error("There are no clips to run in the /clips folder.")
