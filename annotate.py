@@ -91,7 +91,6 @@ if selected_directory and len(frame) > 0:
             st.session_state[f'save{index}'] = True
             st.session_state.current_index += 1
             bar.progress(current_progress())
-            time.sleep(3)
             st.experimental_rerun()
 
         if st.button('Skip', key=f"skip-{index}"):
