@@ -19,6 +19,10 @@ instructions = {
         "as you inhale lengthen through the sides of your waist",
         "lift your back ribs as you exhale",
         "bring palms to touch and gaze up towards your hands"
+    ],
+    "Correction": [
+        "turn to your side",
+        "lower back down into a lunge",
     ]
 }
 
@@ -59,7 +63,7 @@ frame = FM.frames(selected_directory)
 if selected_directory and len(frame) > 0:
     index = st.session_state.current_index
     checkpoints = list(instructions.keys())
-    checkpoints.insert(2, 'None')
+    checkpoints.insert(len(checkpoints)-1, 'None')
     selected_instructions_values = []
     if f'save{index}' not in st.session_state:
         st.session_state[f'save{index}'] = False
