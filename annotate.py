@@ -57,7 +57,7 @@ frame = FM.frames(selected_directory)
 if selected_directory and len(frame) > 0:
     index = st.session_state.current_index
     checkpoints = list(instructions.keys())
-    # checkpoints.insert(0, 'None')
+    checkpoints.insert(2, 'None')
     selected_instructions_values = []
     if f'save{index}' not in st.session_state:
         st.session_state[f'save{index}'] = False
@@ -70,20 +70,24 @@ if selected_directory and len(frame) > 0:
         selected_checkpoint = st.selectbox('Checkpoints:', checkpoints, key=f"checkpoint-{index}")
         if selected_checkpoint != 'None':
             selected_instructions_values = instructions[selected_checkpoint]
-            selected_instructions_values.insert(0, 'None')
+            selected_instructions_values.insert(len(instructions[selected_checkpoint]), 'None')
 
         selected_instructions = st.selectbox('Instructions:', selected_instructions_values,
                                              key=f"instructions-{index}")
 
-        if selected_instructions != 'None' and selected_checkpoint != 'None':
-            if st.button('Save', key=f"save-{index}"):
-                with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
-                    y_txt.write(f"{translate_pose_into_number(selected_checkpoint)}\n{translate_instruction_into_number(selected_checkpoint, selected_instructions)}")
-                st.session_state[f'save{index}'] = True
-                st.session_state.current_index += 1
-                bar.progress(current_progress())
-                time.sleep(3)
-                st.experimental_rerun()
+        if st.button('Save', key=f"save-{index}"):
+            with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
+                y_txt.write(f"{translate_pose_into_number(selected_checkpoint)}\n{translate_instruction_into_number(selected_checkpoint, selected_instructions)}")
+            st.session_state[f'save{index}'] = True
+            st.session_state.current_index += 1
+            bar.progress(current_progress())
+            time.sleep(3)
+            st.experimental_rerun()
+
+        if st.button('Skip', key=f"skip-{index}"):
+            with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
+                y_txt.write("Low Lunge\nNone")
+            st.experimental_rerun()
 else:
     if selected_directory is None:
         st.error("There are no clips to run in the /clips folder.")
