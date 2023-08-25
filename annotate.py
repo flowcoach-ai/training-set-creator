@@ -4,7 +4,7 @@ from utils.filemanager import FileManager
 
 instructions = {
     'Low Lunge': [
-        "Come into a runner's lunge one",
+        'Come into a runners lunge one',
         'leg back one leg forward with your',
         'fingertips underneath your shoulders on',
         'the mat make sure that your feet are hips-width in distance and that your front leg Shin is in a nice straight line over the top of the foot the back, leg knee is lifted up off the ground',
@@ -21,6 +21,17 @@ instructions = {
         'palms to touch and gaze up towards your hands'
     ],
 }
+
+def translate_pose(pose_name):
+    if pose_name == 'Low Lunge':
+        return 0
+    elif pose_name == 'Crescent Pose':
+        return 1
+    else:
+        return 2
+
+def translate_instruction(pose_name, instruction):
+    return (index(translate_pose(pose_name)), index(instruction))
 
 st.title("Aggregating & Annotating Platform")
 
@@ -74,7 +85,7 @@ if selected_directory and len(frame) > 0:
         if selected_instructions != 'None' and selected_checkpoint != 'None':
             if st.button('Save', key=f"save-{index}"):
                 with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
-                    y_txt.write(f"{selected_checkpoint}\n{selected_instructions}")
+                    y_txt.write(f"{translate_pose(selected_checkpoint)}\n{translate_instruction(selected_checkpoint, selected_instructions)}")
                 st.session_state[f'save{index}'] = True
                 st.session_state.current_index += 1
                 bar.progress(current_progress())
