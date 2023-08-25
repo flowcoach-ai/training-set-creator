@@ -15,7 +15,6 @@ checkpoints = ['Low Lunge',
 checkpoint_titles = [titleize_checkpoint(cp) for cp in checkpoints]
 
 mp_pose = mp.solutions.pose
-required_row_length = 99 + len(checkpoint_titles) + 1
 
 
 def coords(i):
@@ -68,13 +67,16 @@ def run():
                 with open(file_path, 'r') as textfile:
                     lines = textfile.readlines()
                     if len(lines) == 0:
-                        raise Exception(f'{file_path} is empty!')
+                        print(f'{file_path} is empty!')
+                        continue
                     checkpoint = lines[0].strip()
                     instruction = lines[1].strip()
-                    rows[file_number].extend(annotate_checkpoint(checkpoint))
-                    rows[file_number].append(instruction)
-                    csv_writer.writerow(rows[file_number])
-
+                    try:
+                        rows[file_number].extend(annotate_checkpoint(checkpoint))
+                        rows[file_number].append(instruction)
+                        csv_writer.writerow(rows[file_number])
+                    except Exception as e:
+                        print(e)
                 continue
             else:
                 continue
