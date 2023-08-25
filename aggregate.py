@@ -24,14 +24,16 @@ instructions = {
     ],
 }
 
-def translate_pose_number_into_text(pose_number):
-    return(checkpoints(pose_number))
 
-def translate_instruction_number_into_text(pose_number, instruction_number):
-    return (index(translate_pose_number_into_text(pose_number)), index(instruction))
+def translate_pose_number_into_text(pose_number):
+    return checkpoints[int(pose_number)]
+
+
+def translate_instruction_number_into_text(pose_name, instruction_number):
+    return instructions[pose_name][int(instruction_number)]
+
 
 def titleize_checkpoint(cp):
-    checkpoint = translate_pose_into_text(cp)
     return 'IS_' + cp.replace(" ", "_").upper()
 
 
@@ -95,11 +97,11 @@ def run():
                     if len(lines) == 0:
                         print(f'{file_path} is empty!')
                         continue
-                    checkpoint_number = lines[0].strip()
-                    instruction_number = lines[1].strip()
+                    checkpoint = translate_pose_number_into_text(lines[0].strip())
+                    instruction = translate_instruction_number_into_text(checkpoint, lines[1].strip())
                     try:
-                        rows[file_number].extend(annotate_checkpoint(checkpoint_number))
-                        rows[file_number].append(translate_instruction_number_into_text(checkpoint_number, instruction_number))
+                        rows[file_number].extend(annotate_checkpoint(checkpoint))
+                        rows[file_number].append(instruction)
                         csv_writer.writerow(rows[file_number])
                     except Exception as e:
                         print(e)

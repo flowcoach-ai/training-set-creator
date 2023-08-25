@@ -23,10 +23,10 @@ instructions = {
 }
 
 def translate_pose_into_number(pose_name):
-    return(index(instructions.keys(), pose_name))
+    return list(instructions.keys()).index(pose_name)
 
 def translate_instruction_into_number(pose_name, instruction):
-    return (index(translate_pose(pose_name)), index(instruction))
+    return instructions[pose_name].index(instruction)
 
 st.title("Aggregating & Annotating Platform")
 
@@ -80,7 +80,7 @@ if selected_directory and len(frame) > 0:
         if selected_instructions != 'None' and selected_checkpoint != 'None':
             if st.button('Save', key=f"save-{index}"):
                 with open(f"{selected_directory}/{frame[index]}.txt", 'w') as y_txt:
-                    y_txt.write(f"{translate_pose(selected_checkpoint)}\n{translate_instruction(selected_checkpoint, selected_instructions)}")
+                    y_txt.write(f"{translate_pose_into_number(selected_checkpoint)}\n{translate_instruction_into_number(selected_checkpoint, selected_instructions)}")
                 st.session_state[f'save{index}'] = True
                 st.session_state.current_index += 1
                 bar.progress(current_progress())
