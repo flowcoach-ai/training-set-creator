@@ -113,7 +113,9 @@ def run():
                         continue
 
                     checkpoint = translate_pose_number_into_text(lines[0].strip())
-                    # instruction = translate_instruction_number_into_text(checkpoint, lines[1].strip())
+
+                    # Toggle line for number/string instruction
+                    instruction = translate_instruction_number_into_text(checkpoint, lines[1].strip())
 
                     try:
                         rows[file_number].extend(annotate_checkpoint(checkpoint))
